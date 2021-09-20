@@ -16,7 +16,6 @@ class Population:
   def iterate(self):
     self.best().search()
     for i in range(self.parent.size):
-      self.particles[i].eval()
       self.particles[i].move()
 
   # Find best particle
@@ -33,20 +32,20 @@ class Population:
 
   # Get objective function value of all particles
   def values(self):
-    return np.array([p.value for p in self.particles])
+    return np.array([p.value() for p in self.particles])
 
   # Get total force vector of all particles
   def forces(self):
     # Calculate denominator sum
     d = 0
     for i in range(self.parent.size):
-      d += self.values()[i] - self.parent.f(self.best().pos)
+      d += self.values()[i] - self.best().value()
 
     # Calculate particle charge
     q = np.zeros(self.parent.size)
     r = []
     for i in range(self.parent.size):
-      t = self.values()[i] - self.parent.f(self.best().pos)
+      t = self.values()[i] - self.best().value()
       q[i] = np.exp(-self.parent.dim * t / d)
 
     # Calculate force by Coulomb's law
@@ -69,4 +68,3 @@ class Population:
     for k in range(self.parent.dim):
       m = np.maximum(self.parent.upper[k] - self.parent.lower[k], m)
     return m
-
