@@ -32,9 +32,9 @@ class Particle:
           lmd2 = self.rng()
 
           if lmd1 > 0.5:
-            y[k] = np.min(y[k] + lmd2 * length, self.opt().upper[k])
+            y[k] = np.minimum(y[k] + lmd2 * length, self.opt().upper[k])
           else:
-            y[k] = np.max(y[k] - lmd2 * length, self.opt().lower[k])
+            y[k] = np.maximum(y[k] - lmd2 * length, self.opt().lower[k])
 
           if self.opt().f(y) < self.opt().f(self.parent.particles[i].pos):
             self.parent.particles[i].pos = self.copy(y)
@@ -46,7 +46,7 @@ class Particle:
     for i in range(self.opt().size):
       if i is not self.parent.best().index:
         lmd = self.rng()
-        f = np.divide(self.parent.force()[i], np.sqrt(np.dot(self.parent.force()[i], self.parent.force()[i])))
+        f = self.parent.forces()[i] / np.sqrt(np.dot(self.parent.forces()[i], self.parent.forces()[i]))
 
         for k in range(self.opt().dim):
           if f[k] > 0:
@@ -69,4 +69,4 @@ class Particle:
 
   # Random number generator
   def rng(self):
-    return np.random.default_rng(self.opt().seed).random()
+    return np.random.uniform()
