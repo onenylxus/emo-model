@@ -22,13 +22,13 @@ class Optimizer:
     self.step = step if step is not None else STEP_SIZE        # Step size
 
     # Data
-    self.iter = 0                                              # Number of iterations
+    self.gen = 0                                               # Number of generations
     self.population = Population(self)                         # Population
 
   # Iterate
   def iterate(self):
     self.population.iterate()
-    self.iter += 1
+    self.gen += 1
 
   # Get solution
   def solution(self):

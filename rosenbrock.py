@@ -11,11 +11,11 @@ def rosenbrockV(x, y):
 
 # Execution script
 if __name__ == '__main__':
-  o = Optimizer(2, [-2, -2], [2, 2], 10, rosenbrock, None, None)
+  o = Optimizer(2, [-2, -2], [2, 2], 10, rosenbrock)
   i = Interface(o, 'Rosenbrock function', 'rosenbrock')
   i.plot_contour(rosenbrockV)
 
-  while i.opt.iter < 50:
+  while i.opt.gen < 50:
     i.opt.iterate()
     i.record()
     i.plot_contour(rosenbrockV)

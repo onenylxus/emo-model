@@ -8,15 +8,16 @@ import matplotlib.pyplot as plt
 class Interface:
   # Constructor
   def __init__(self, opt, name, folder):
-    self.opt = opt       # Optimizer
-    self.name = name     # Model name
-    self.folder = folder # Folder name
+    self.opt = opt          # Optimizer
+    self.name = name        # Model name
+    self.folder = folder    # Folder name
 
-    self.positions = []  # Position records
-    self.values = []     # Value records
-    self.trend = []      # Solution trend
+    self.positions = []     # Position records
+    self.values = []        # Value records
+    self.bestPositions = [] # Solution positons
+    self.bestValues = []    # Solution values
 
-    self.dirb = True     # Directory boolean
+    self.dirb = True        # Directory boolean
 
     # Create missing directories
     if self.dirb:
@@ -38,22 +39,21 @@ class Interface:
   def record(self):
     self.positions.append(self.opt.population.positions())
     self.values.append(self.opt.population.values())
-    self.trend.append(self.opt.solution().value())
+    self.bestPositions.append([v for v in self.opt.solution().pos])
+    self.bestValues.append(self.opt.solution().value())
 
-    l = len(self.trend) - 1
-    print(f'Iteration {l}:')
+    l = len(self.bestValues) - 1
+    print(f'Generation {l}:')
     for i in range(self.opt.size):
       print(f'  Particle {i + 1}: {self.positions[l][i]}, value = {self.values[l][i]}')
-    print(f'  Best particle is particle {self.opt.solution().index + 1} with value {self.trend[l]}\n')
+    print(f'  Best particle is particle {self.opt.solution().index + 1} with value {self.bestValues[l]}\n')
 
   # Plot objective function value
   def plot_ofv(self):
-    plt.figure()
-    plt.plot(self.trend, linewidth=4)
+    plt.plot(self.bestValues, linewidth=4)
     plt.grid()
-    plt.xlabel('Iterations')
+    plt.xlabel('Generations')
     plt.ylabel('Objective function minimum')
-    plt.show()
     plt.savefig('contours/%s/ofv.png' %(self.folder), format='png')
     plt.clf()
 
@@ -65,13 +65,13 @@ class Interface:
       X, Y = np.meshgrid(xr, yr)
       Z = f(X, Y)
 
-      plt.figure()
       plt.contour(X, Y, Z, linewidths=2)
-      plt.scatter(self.positions[self.opt.iter][:, 0], self.positions[self.opt.iter][:, 1], marker='x')
+      if self.opt.gen > 0:
+        plt.plot(self.bestPositions[self.opt.gen - 1][0], self.bestPositions[self.opt.gen - 1][1], 'yo')
+      plt.scatter(self.positions[self.opt.gen][:, 0], self.positions[self.opt.gen][:, 1], marker='x')
       plt.plot(self.opt.solution().pos[0], self.opt.solution().pos[1], 'ro')
-      plt.title(f'Iteration {self.opt.iter}')
+      plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
       plt.xlim(self.opt.lower[0], self.opt.upper[0])
       plt.ylim(self.opt.lower[1], self.opt.upper[1])
-      plt.show()
-      plt.savefig('contours/%s/iter%03d.png' %(self.folder, self.opt.iter), format='png')
+      plt.savefig('contours/%s/iter%03d.png' %(self.folder, self.opt.gen), format='png')
       plt.clf()
