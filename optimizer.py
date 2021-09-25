@@ -5,11 +5,12 @@ from population import Population
 # Constants
 MAX_LSITER = 50
 STEP_SIZE = 0.001
+LS_MODE = 1
 
 # Optimizer class
 class Optimizer:
   # Constructor
-  def __init__(self, dim, lower, upper, size, f, lsiter=None, step=None):
+  def __init__(self, dim, lower, upper, size, f, lsiter=None, step=None, lsmode=None):
     # Space definition
     self.dim = dim                                             # Dimension of the space
     self.lower = np.array(lower)                               # Lower bound of the space
@@ -20,6 +21,7 @@ class Optimizer:
     # Limits
     self.lsiter = lsiter if lsiter is not None else MAX_LSITER # Maximum number of local search iterations
     self.step = step if step is not None else STEP_SIZE        # Step size
+    self.lsmode = lsmode if lsmode is not None else LS_MODE    # Best particle for local search
 
     # Data
     self.gen = 0                                               # Number of generations

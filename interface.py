@@ -73,5 +73,14 @@ class Interface:
       plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
       plt.xlim(self.opt.lower[0], self.opt.upper[0])
       plt.ylim(self.opt.lower[1], self.opt.upper[1])
-      plt.savefig('contours/%s/iter%03d.png' %(self.folder, self.opt.gen), format='png')
+      plt.savefig('contours/%s/contour_iter%03d.png' %(self.folder, self.opt.gen), format='png')
       plt.clf()
+
+  # Plot position bar chart
+  def plot_posbar(self, f):
+    for k in range(self.opt.dim):
+      plt.bar(k, self.opt.solution().pos[k])
+    plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
+    plt.ylabel('Values')
+    plt.savefig('contours/%s/bar_iter%03d.png' %(self.folder, self.opt.gen), format='png')
+    plt.clf()

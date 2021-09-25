@@ -14,8 +14,11 @@ class Population:
 
   # Iterate function
   def iterate(self):
-    self.best().search()
+    if self.parent.lsmode == 1:
+      self.best().search()
     for i in range(self.parent.size):
+      if self.parent.lsmode == 2:
+        self.particles[i].search()
       self.particles[i].move()
 
   # Find best particle

@@ -12,11 +12,12 @@ def rosenbrockV(x, y):
 # Execution script
 if __name__ == '__main__':
   o = Optimizer(2, [-2, -2], [2, 2], 10, rosenbrock)
-  i = Interface(o, 'Rosenbrock function', 'rosenbrock')
+  i = Interface(o, 'Rosenbrock function', 'rsamp1')
   i.plot_contour(rosenbrockV)
 
   while i.opt.gen < 50:
     i.opt.iterate()
     i.record()
     i.plot_contour(rosenbrockV)
+    i.plot_posbar(rosenbrockV)
   i.plot_ofv()
