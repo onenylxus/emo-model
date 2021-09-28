@@ -2,6 +2,7 @@
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 
 
 # Interface class
@@ -21,11 +22,11 @@ class Interface:
 
     # Create missing directories
     if self.dirb:
-      if not os.path.exists(f'{os.getcwd()}/contours'):
-        os.mkdir(f'{os.getcwd()}/contours')
+      if not os.path.exists(f'{os.getcwd()}/output'):
+        os.mkdir(f'{os.getcwd()}/output')
         print('Contour folder created')
-      if not os.path.exists(f'{os.getcwd()}/contours/{self.folder}'):
-        os.mkdir(f'{os.getcwd()}/contours/{self.folder}')
+      if not os.path.exists(f'{os.getcwd()}/output/{self.folder}'):
+        os.mkdir(f'{os.getcwd()}/output/{self.folder}')
         print(f'{self.folder} folder created in contour folder')
       print('')
     self.dirb = False
@@ -54,7 +55,7 @@ class Interface:
     plt.grid()
     plt.xlabel('Generations')
     plt.ylabel('Objective function minimum')
-    plt.savefig('contours/%s/ofv.png' %(self.folder), format='png')
+    plt.savefig('output/%s/ofv.png' %(self.folder), format='png')
     plt.clf()
 
   # Plot contour
@@ -73,7 +74,25 @@ class Interface:
       plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
       plt.xlim(self.opt.lower[0], self.opt.upper[0])
       plt.ylim(self.opt.lower[1], self.opt.upper[1])
-      plt.savefig('contours/%s/contour_iter%03d.png' %(self.folder, self.opt.gen), format='png')
+      plt.savefig('output/%s/contour_iter%03d.png' %(self.folder, self.opt.gen), format='png')
+      plt.clf()
+
+  # Plot contour with colourful particles
+  def plot_contour_cm(self, f):
+    if self.opt.dim == 2:
+      c = cm.rainbow(np.linspace(0, 1, self.opt.size))
+      xr = np.linspace(self.opt.lower[0], self.opt.upper[0], 50)
+      yr = np.linspace(self.opt.lower[1], self.opt.upper[1], 50)
+      X, Y = np.meshgrid(xr, yr)
+      Z = f(X, Y)
+
+      plt.contour(X, Y, Z, linewidths=2)
+      plt.scatter(self.positions[self.opt.gen][:, 0], self.positions[self.opt.gen][:, 1], marker='x', color=c)
+      plt.plot(self.opt.solution().pos[0], self.opt.solution().pos[1], 'o')
+      plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
+      plt.xlim(self.opt.lower[0], self.opt.upper[0])
+      plt.ylim(self.opt.lower[1], self.opt.upper[1])
+      plt.savefig('output/%s/contour_iter%03d.png' %(self.folder, self.opt.gen), format='png')
       plt.clf()
 
   # Plot position bar chart
@@ -82,5 +101,5 @@ class Interface:
       plt.bar(k, self.opt.solution().pos[k])
     plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
     plt.ylabel('Values')
-    plt.savefig('contours/%s/bar_iter%03d.png' %(self.folder, self.opt.gen), format='png')
+    plt.savefig('output/%s/bar_iter%03d.png' %(self.folder, self.opt.gen), format='png')
     plt.clf()
