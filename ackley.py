@@ -12,7 +12,8 @@ def ackley4(pos):
 # Execution script
 if __name__ == '__main__':
   o = Optimizer(4, [-5, -5, -5, -5], [5, 5, 5, 5], 20, ackley4, step=0.025)
-  i = Interface(o, 'Ackley function', 'ackley4')
+  i = Interface(o, 'Ackley function', 'ackley5')
+  i.plot_posbar()
 
   while i.opt.gen < 50:
     i.opt.iterate()
