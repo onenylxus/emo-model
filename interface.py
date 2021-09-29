@@ -24,10 +24,10 @@ class Interface:
     if self.dirb:
       if not os.path.exists(f'{os.getcwd()}/output'):
         os.mkdir(f'{os.getcwd()}/output')
-        print('Contour folder created')
+        print('Output folder created')
       if not os.path.exists(f'{os.getcwd()}/output/{self.folder}'):
         os.mkdir(f'{os.getcwd()}/output/{self.folder}')
-        print(f'{self.folder} folder created in contour folder')
+        print(f'{self.folder} folder created in output folder')
       print('')
     self.dirb = False
 
@@ -96,7 +96,7 @@ class Interface:
       plt.clf()
 
   # Plot position bar chart
-  def plot_posbar(self, f):
+  def plot_posbar(self):
     for k in range(self.opt.dim):
       plt.bar(k, self.opt.solution().pos[k])
     plt.title(f'Generation {self.opt.gen} (ofv={self.bestValues[self.opt.gen]})')
