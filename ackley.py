@@ -17,4 +17,5 @@ if __name__ == '__main__':
   while i.opt.gen < 50:
     i.opt.iterate()
     i.record()
+    i.plot_posbar()
   i.plot_ofv()
