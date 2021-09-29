@@ -36,19 +36,24 @@ class Particle:
           count = self.opt().lsiter - 1
         count += 1
 
+    print('Search done')
+
   # Movement
   def move(self):
     if self.index is not self.parent.best().index:
       for i in range(self.opt().size):
         if i is not self.index:
           lmd = self.rng()
-          f = self.parent.forces()[i] / np.sqrt(np.dot(self.parent.forces()[i], self.parent.forces()[i]))
+          t = self.parent.tfv[i]
+          f = t / np.sqrt(np.dot(t, t))
 
           for k in range(self.opt().dim):
             if f[k] > 0:
               self.pos[k] += lmd * f[k] * (self.opt().upper[k] - self.pos[k])
             else:
               self.pos[k] += lmd * f[k] * (self.pos[k] - self.opt().lower[k])
+
+    print(f'Particle {self.index} move done')
 
 
   # Get optimizer

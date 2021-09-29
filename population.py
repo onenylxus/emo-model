@@ -8,9 +8,11 @@ class Population:
   def __init__(self, parent):
     self.parent = parent # Parent (Optimizer)
     self.particles = []  # Particles
+    self.tfv = []        # Total force vector
 
     for i in range(self.parent.size):
       self.particles.append(Particle(self, i))
+      self.tfv.append(np.zeros(self.parent.dim))
 
   # Iterate function
   def iterate(self):
@@ -19,6 +21,7 @@ class Population:
     for i in range(self.parent.size):
       if self.parent.lsmode == 2:
         self.particles[i].search()
+      self.forces()
       self.particles[i].move()
 
   # Find best particle
@@ -46,24 +49,23 @@ class Population:
 
     # Calculate particle charge
     q = np.zeros(self.parent.size)
-    r = []
+    self.tfv = []
     for i in range(self.parent.size):
       t = self.values()[i] - self.best().value()
       q[i] = np.exp(-self.parent.dim * t / d)
 
     # Calculate force by Coulomb's law
     for i in range(self.parent.size):
-      r.append(np.zeros(self.parent.dim))
+      self.tfv.append(np.zeros(self.parent.dim))
       for j in range(self.parent.size):
         if i is not j:
           s = np.subtract(self.positions()[i], self.positions()[j])
           for k in range(self.parent.dim):
+            d = (self.positions()[j][k] - self.positions()[i][k]) * q[i] * q[j] / np.square(np.dot(s, s))
             if self.parent.f(self.positions()[j]) < self.parent.f(self.positions()[i]):
-              r[i][k] += (self.positions()[j][k] - self.positions()[i][k]) * q[i] * q[j] / np.square(np.dot(s, s))
+              self.tfv[i][k] += d
             else:
-              r[i][k] -= (self.positions()[j][k] - self.positions()[i][k]) * q[i] * q[j] / np.square(np.dot(s, s))
-
-    return r
+              self.tfv[i][k] -= d
 
   # Get maximum range of the space
   def max_range(self):
