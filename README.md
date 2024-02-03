@@ -78,7 +78,7 @@ The repository **emo-model** is a demonstration of using EMO to solve optimizati
 - The best particle remains in position, while other particles move according to their position vector
 - Process of EMO stops when number of generations exceeds or objective function minimum is optimal
 
-# Examples
+## Examples
 - Rosenbrock function is used to demonstrate the process of EMO:
 
 > **Rosenbrock Sample 1: Local search on best particle**
